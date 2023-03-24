@@ -12,6 +12,10 @@ public class Node {
     public int getValue() {
         return value;
     }
+    
+    public void setValue(int chave){
+        value = chave;
+    }
 
     public Node getRight() {
         return right;

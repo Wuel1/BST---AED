@@ -37,10 +37,15 @@ public class BST implements EstruturaDeDados{
 
     @Override
     public void delete(int chave) {
-        
+        if(root.getRight() == null && root.getLeft() == null){
+            root = null;
+        }
+        else{
+            deleteNode(root, chave);
+        }
     }
 
-    private void deleteNode(Node n, int key){
+    private Node deleteNode(Node n, int key){
         if (key >= n.getValue()){
             Node r = n.getRight();
             if (r.getValue() == key){
@@ -48,20 +53,30 @@ public class BST implements EstruturaDeDados{
                 if (r.getRight() == null && r.getLeft() == null){
                     //Caso 1
                     n.setRight(null);
+                   
+                    
                 } else if (r.getRight() == null){
                     //Caso 2
                     n.setRight(r.getLeft());
+                    
+                    
                 } else if (r.getLeft() == null){
                     //Caso 2
                     n.setRight(r.getRight());
+                    
+                    
                 } else{
-                    n.setright(r.getright());
-                }               
-                
+                    Node troca = minNo(r);
+                    n.setValue(troca.getValue());
+                    n.setRight(deleteNode(r, troca.getValue()));
+                }        
             }
-
         }
+        return n;
+        
+        
     }
+
 
     public Node minNo(Node n){
         n.atual = n;
@@ -123,8 +138,15 @@ public class BST implements EstruturaDeDados{
         tree.insert(4);
         tree.insert(2);
         tree.insert(5);
+        tree.insert(1);
+        tree.insert(3);
         tree.insert(6);
         System.out.println(tree.search(5));
-        System.out.println(tree.search(7));
+        tree.delete(5);
+        System.out.println(tree.search(5));
+        System.out.println(tree.search(6));
+        tree.delete(6);
+        System.out.println(tree.search(6));
+        
     }
 }
