@@ -189,8 +189,30 @@ public class BST implements EstruturaDeDados{
 
     
     @Override
-    public int prodessor(int chave) {
-        return 0;
+    public int prodessor(int key) {
+        Node n = returnNo(root, key);
+        if (n == null) {
+            return -1; // nó não encontrado na árvore
+        }
+        if (n.getValue() == minimum()) { // Não tem antecessor
+            return -1;
+        }
+        if (n.getLeft() != null) {
+            // Caso 1 - Possui filhos
+            Node antecessor = n.getLeft();
+            while (antecessor.getRight() != null) {
+                antecessor = antecessor.getRight();
+            }
+            return antecessor.getValue();
+        } else {
+            // Caso 2 - Não possui filhos 
+            Node pai = searchPai(root, n.getValue());
+            while (pai != null && n == pai.getLeft()) {
+                n = pai;
+                pai = searchPai(root, n.getValue());
+            }
+            return pai.getValue();         
+        }
     }
     
     // private int searchNodeComp(Node n, int key){
@@ -231,6 +253,7 @@ public class BST implements EstruturaDeDados{
         System.out.println(tree.maximum());
         System.out.println(tree.sucessor(11)); // 12
         System.out.println(tree.sucessor(3)); // 5
+        System.out.println(tree.prodessor(5)); // 3
         
     }
 }
