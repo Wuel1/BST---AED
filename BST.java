@@ -103,24 +103,35 @@ public class BST implements EstruturaDeDados{
         }
     }
 
-    // public Node buscarPai(Node raiz, int valorBuscado) {
-    //     if (raiz == null || raiz.getValue() == valorBuscado) {
-    //         return null; // árvore vazia ou valor encontrado na raiz
-    //     }
+    public Node searchPai(Node root, int key) {
+        if (root == null || root.getValue() == key) {
+            return null; 
+        }
         
-    //     if ((raiz.getLeft() != null && raiz.getLeft().getValue() == valorBuscado) || 
-    //         (raiz.getRight() != null && raiz.getRight().getValue() == valorBuscado)) {
-    //         return raiz; // encontramos o nó filho com o valor buscado, retornamos o pai
-    //     }
+        if ((root.getLeft() != null && root.getLeft().getValue() == key) || 
+            (root.getRight() != null && root.getRight().getValue() == key)) {
+            return root;
+        }
         
-    //     Node pai = buscarPai(raiz.getLeft(), valorBuscado); // busca recursiva no filho esquerdo
+        Node pai = searchPai(root.getLeft(), key); // busca filho esquerdo
         
-    //     if (pai == null) {
-    //         pai = buscarPai(raiz.getRight(), valorBuscado); // busca recursiva no filho direito
-    //     }
+        if (pai == null) {
+            pai = searchPai(root.getRight(), key); // busca filho direito
+        }
         
-    //     return pai;
-    // }
+        return pai;
+    }
+
+    public Node returnNo(Node n, int key) {
+        if (n == null || n.getValue() == key) {
+            return n;
+        }
+    
+        if (key < n.getValue()) {
+            return returnNo(n.getLeft(), key);
+        }    
+        return returnNo(n.getRight(), key);
+    }    
      
 
     @Override
@@ -149,24 +160,66 @@ public class BST implements EstruturaDeDados{
     }
 
     @Override
-    public int sucessor(int chave) {
-        return 0;
-    }
+    public int sucessor(int key) {
+        Node n = returnNo(root , key);
+        if (n == null) {
+            return -1; // nó não encontrado na árvore
+        }
+        if(n.getValue() == maximum()){ // Não tem sucessor
+            return -1;
+        }
+        if (n.getRight() != null) {
+            // Caso 1 - Possui filhos
+            Node sucessor = n.getRight();
+            while (sucessor.getLeft() != null) {
+                sucessor = sucessor.getLeft();
+            }
+            return sucessor.getValue();
+        } else {
+            // Caso 2 - Não possui filhos
+            Node pai = searchPai(root, n.getValue());
+            while (pai != null && n == pai.getRight()) {
+                n = pai;
+                pai = searchPai(root, n.getValue());
+            }
+            return pai.getValue(); 
+        }
+    }    
 
+
+    
     @Override
     public int prodessor(int chave) {
         return 0;
     }
+    
+    // private int searchNodeComp(Node n, int key){
+    //     if (key > n.getValue()){
+    //         if (n.getRight() == null){
+    //             return false;
+    //         } else {
+    //             return searchNode(n.getRight(),key);
+    //         }
+    //     } else {
+    //         if (n.getLeft() == null){
+    //             return false;
+    //         } else {
+    //             return searchNode(n.getLeft(),key);
+    //         }
+    //     }
+    // }
 
     public static void main(String[] args) {
         BST tree = new BST();
         System.out.println(tree.search(7)); // false
         tree.insert(8);
         tree.insert(5);
+        tree.insert(12);
         tree.insert(11);
         tree.insert(10);
         tree.insert(1);
         tree.insert(3);
+        tree.insert(13);
         tree.insert(6);
         System.out.println(tree.search(10)); //true
         tree.delete(10);
@@ -176,6 +229,8 @@ public class BST implements EstruturaDeDados{
         System.out.println(tree.search(6)); // false
         System.out.println(tree.minimum());
         System.out.println(tree.maximum());
+        System.out.println(tree.sucessor(11)); // 12
+        System.out.println(tree.sucessor(3)); // 5
         
     }
 }
