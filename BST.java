@@ -125,12 +125,27 @@ public class BST implements EstruturaDeDados{
 
     @Override
     public int minimum() {
-        return 0;
+        if(root != null){
+            Node min = root;
+            while(min.getLeft() != null){
+                min = min.getLeft();
+            }
+            return min.getValue();
+        }
+        return -1;
     }
+    
 
     @Override
     public int maximum() {
-        return 0;
+        if(root != null){
+            Node max = root;
+            while(max.getRight() != null){
+                max = max.getRight();
+            }
+            return max.getValue();
+        }
+        return -1;
     }
 
     @Override
@@ -159,6 +174,8 @@ public class BST implements EstruturaDeDados{
         System.out.println(tree.search(6)); // true
         tree.delete(6);
         System.out.println(tree.search(6)); // false
+        System.out.println(tree.minimum());
+        System.out.println(tree.maximum());
         
     }
 }
